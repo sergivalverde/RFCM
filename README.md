@@ -12,8 +12,9 @@ options.info = 0;
 options.gpu = 1;
 options.beta = 1;
 options.maxiter = 500;
+classes = 3;
 
-[s] = rfcm(MRI_brain, 3, options);
+[s] = rfcm(MRI_brain, classes, options);
 
 mri_brain.img = s;
 save_nifti(mri_brain,'segmentation_MRI');

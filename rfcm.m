@@ -1,12 +1,34 @@
 
-function [seg_out, C] = rfcm(input_image, c, options)
-                                     
+function [seg_out, C, probability_maps] = rfcm(input_image, c, options)
+                                    
 % ************************************************************************
 % Robust fuzzy-c-means segmentation
+%  -inputs:
+%   -> input_image (2d or 3d input image) 
+%   -> c: number of classes 
+%   -> options:
+%             options.weighting = fuzzy factor exponent in FCM (default 2)
+%             options.maxiter = Number of maximum iterations during energy minimization FCM (default 200)
+%             options.num_neigh = Radius of the neighborhood used in spatial contraint (default 1)
+%             options.dim = Dimension of the neighborhood (default 2)
+%             options.term = Maximum error in energy minimization (default 1E-3)
+%             options.gpu = Use GPU (default 0)
+%             options.info = Show information during tissue segmentation (default 0)
 %
-% Sergi Valverde svalverde@eia.udg.edu
-% ************************************************************************
+% - outputs:
+%   seg_out = hard labelled segmentation
+%   C = final class intensity centers
+%   probability_maps = probabilistic segmentation for each class probability_maps = [input_size, num_of_classes]
+%
+%
+% svalverde@eia.udg.edu 2016
+% NeuroImage Computing Group. Vision and Robotics Insititute (University of Girona)
+% ***************************************************************************************************
 
+
+
+
+    
     switch nargin
       case 1
         error('Incorrect number of parameters');
@@ -150,14 +172,14 @@ function [seg_out, C] = rfcm(input_image, c, options)
         W = gather(W);
     end
 
-    %    % probability classes
-    %    probability_maps = zeros([size(seg_out), c]);
-    %    for cl=1:c
-    %        tmp_prob = zeros(size(seg_out));
-    %        tmp_prob(Y) = W(index(cl),:);
-    %        probability_maps(:,:,:,cl) = tmp_prob;
-    %    end
-    %    
+    % probability classes
+    probability_maps = zeros([size(seg_out), c]);
+    for cl=1:c
+        tmp_prob = zeros(size(seg_out));
+        tmp_prob(Y) = W(index(cl),:);
+        probability_maps(:,:,:,cl) = tmp_prob;
+    end
+        
 end
 
 
